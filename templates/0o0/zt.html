@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% csrf_token %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎来到</title>
+    <script type="application/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+</head>
+<style type="text/css">
+    body {
+        margin: 0px 0px;
+        width: 100%;
+        height: 100%;
+        background: url(/static/img/b1.jpg);
+    }
+
+    .i_show_id, .i_show_item, .i_show_title {
+        margin: 0px 0px;
+        font-family: 微软雅黑;
+    }
+
+    .i_show_item {
+
+        width: 70%;
+        height: 80px;
+        background: #fff;
+        float: left;
+        box-shadow: 0px 0px 3px #000;
+    }
+
+    .i_show_id {
+        text-align: center;
+        line-height: 80px;
+        width: 100px;
+        height: 100%;
+        background: #444444;
+        color: #fff;
+        font-size: 30px;
+        float: left
+    }
+
+    .i_show_title {
+        height: 80px;
+        float: left;
+        font-size: 30px;
+        line-height: 80px;
+        margin: 0px 0px;
+    }
+
+    .i_show_time {
+        line-height: 40px;
+        margin: 0px 0px;
+        width: 30%;
+        height: 80px;
+        float: left;
+        font-size: 25px;
+        font-family: 微软雅黑;
+    }
+
+    .i_item {
+        width: 90%;
+        margin: 5% 40px;
+        height: 70px;
+    }
+</style>
+<script type="application/javascript">
+    $(function () {
+        $(".close_dm").click(function () {
+            if ($(".close_dm").text().toString() == "掀开刘海") {
+                $(".close_dm").text("遮上刘海")
+                $(".showdm").animate({height: '0px'}, function () {
+                    $(".showdm").css("display", "none")
+                    $(".showdm").css("visibility", "hidden")
+                });
+            } else {
+                $(".close_dm").text("掀开刘海")
+                $(".showdm").css("display", "block")
+                $(".showdm").css("visibility", "visible")
+                $(".showdm").animate({height: '500px'}, function () {
+                });
+            }
+        })
+        $(".i_item").each(function () {
+            $(this).click(function () {
+                var id = $(this.getElementsByClassName("i_show_id")).text();
+                var zt_name = $(".show_zt_name").text().toString().split("· ")[1];
+                var wz_name = $(this.getElementsByClassName("i_show_title")).text().toString().replace("·","");
+                {#var zt_name = $(".show_zt_name").text().toString().replace(" ","").replace("·","");#}
+                {#var wz_name = $(".i_show_title").text();#}
+                $("#idd").val("")
+                $("#idd").val(id)
+                $("#indexd").val("")
+                $("#indexd").val(zt_name)
+                $("#item_wz_name").val("")
+                $("#item_wz_name").val(wz_name)
+                $("#toarti").submit()
+            })
+        })
+    })
+</script>
+<body>
+<div style="width: 100%;height: 100%;">
+    <div class="title" style="width: 100%;height: 50px;background-color: #444;box-shadow:5px 5px 10px #ffa9a5;">
+        <div style="width: 33.33333%;height: 100%;float: left;background: #444">
+
+        </div>
+        <div style="width: 33.33333%;height: 100%;float: left;background: #444">
+            <p style="color: white;text-align: center">曾经沧海难为水</p>
+        </div>
+        <div style="width: 33.33333%;height: 100%;float: left;background: #444">
+            <button class="close_dm" style="float: right;height:30px;background: #f7fffc;margin: 10px 5px">掀开刘海</button>
+        </div>
+    </div>
+    <div class="showdm"
+         style="width: 98%;height: 500px;margin: 0px 1%;background-color: #444;opacity: 0.95;box-shadow:0px 5px 10px #444;">
+    </div>
+    <div style="width: 100%;height: 80px;margin-top: 20px;margin-left: 20px">
+        <h1 style="margin: 0px 0px;height: 50px;font-family: 微软雅黑;float: left;font-size: 40px;color: #ff7274">专题</h1>
+        <h1 class="show_zt_name" style="margin: 0px 0px;height: 50px;font-family: 微软雅黑;float: left;font-size: 40px">
+            · {{ zt_name }}</h1>
+    </div>
+    <div style="width: 100%;height: 50px;margin: 0px 10px">
+        <h1 style="margin: 0px 0px;font-family: 微软雅黑;float: left;"> · IShaBing · 2018/5/14</h1>
+        <h1 style="margin: 0px 0px;font-family: 微软雅黑;float: left;"> · 往事如烟</h1>
+    </div>
+    <form id="toarti" action="arti" style="display: none" method="post">
+        {% csrf_token %}
+        <input id="idd" type="hidden" name="id">
+        <input id="indexd" type="hidden" name="index">
+        <input id="item_wz_name" type="hidden" name="wz_name" value="">
+    </form>
+    {{ show_all_item|safe }}
+</div>
+</body>
+</html>

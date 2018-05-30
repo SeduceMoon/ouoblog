@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章管理</title>
+    <script type="application/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+{% csrf_token %}
+<style type="text/css">
+    * {
+        margin: 0px 0px;
+    }
+
+    .title {
+        width: 100%;
+        height: 50px;
+        text-align: center;
+        color: white;
+        margin: 0px 0px;
+        font-size: 20px;
+        line-height: 50px;
+        font-family: 微软雅黑;
+        background-color: #181818;
+    }
+
+    .val_sty {
+        background-color: white;
+        border-style: none;
+        padding-left: 5px;
+        border-radius: 5px;
+        height: 40px;
+        margin: 5px 0px;
+        color: #666;
+    }
+
+    .show_item {
+        width: 98%;
+        height: 60px;
+        line-height: 60px;
+        background-color: #eee;
+        padding-left: 2%;
+        font-size: 20px;
+        color: #1e88e5;
+        list-style: none;
+        margin: 5px 0px;
+        font-family: 微软雅黑;
+    }
+
+    .show_item input {
+        float: right;
+        height: 40px;
+        margin: 5px 5px;
+    }
+
+    .show_item h3, h4, h5 {
+        width: 35%;
+        float: left;
+    }
+
+    .show_item h5 {
+        padding-left: 5px;
+    }
+
+    .show_item h3 {
+        width: auto;
+        color: #4fc50f;
+    }
+    .bj,.sc,.zt_find,.find,.show_seletc_name{
+        height: 40px;
+        width: auto;
+        background-color: #eee;
+        border-style: solid;
+        margin: 0px 0px;
+    }
+</style>
+<script type="application/javascript">
+    $(function () {
+        $(".zt_find").click(function () {
+            $(".value_find").val($(".show_seletc_name").val())
+            $(".type_r").val("nofind")
+            $(".sub_zt_find").submit()
+        })
+        $(".sc").each(function () {
+            $(this).click(function () {
+                var wz_zt=$(this).prev().prev().html().toString().replace("来自:","")
+                var wz_mc=$(this).prev().prev().prev().html()
+                var isdelete= confirm("你确定要删除文章？")
+                if(isdelete){
+                    $.ajax({
+                        method:"POST",
+                        url:"scwz",
+                        data:{"wz_zt":wz_zt,"wz_mc":wz_mc,"csrfmiddlewaretoken":$("[name=csrfmiddlewaretoken]").val()},
+                        success:function (data) {
+                            if(data.indexOf("ok")!=-1) window.location.reload()
+                        },
+                        error:function (data) {
+                            alert("删除失败")
+                        }
+                    })
+                }
+            })
+        })
+    })
+</script>
+<div class="title">
+    <h2 style="width: 33.333%;float: left;height: 1px;"></h2>
+    <h2 style="width: 33.333%;float: left">文章管理</h2>
+</div>
+<div class="wz_lb" style="margin: auto auto">
+    <div style="width: 100%;height: 50px;background-color: #eee">
+        <div class="zt_select"
+             style="height: 50px;width: 50%;color: #666;text-align: center;line-height: 40px;font-size: 15px;float: left">
+            选择专题:
+            <select class="show_seletc_name" name="wz_by1" style="color: #ff7274;font-size: 15px;height: 50px;">
+                <option value="*">请选择专题(默认全部)</option>
+                <option value="因为一个人爱上一座城">因为一个人爱上一座城</option>
+                <option value="一首歌一个故事">一首歌一个故事</option>
+                <option value="戴我手链的女孩">戴我手链的女孩</option>
+                <option value="生生">生生</option>
+                <option value="努力挣扎的黑夜">努力挣扎的黑夜</option>
+                <option value="生活的琐碎">生活的琐碎</option>
+                <option value="人艰不拆">人艰不拆</option>
+                <option value="苍天饶过谁">苍天饶过谁</option>
+                <option value="幼稚而可爱的伙伴们">幼稚而可爱的伙伴们</option>
+            </select>
+            <form class="sub_zt_find" action="wzgl" method="post" style="display: none;width: 100%;height: 50px;margin: 0px 0px">
+                <input class="value_find" type="text" name="value" placeholder="请输入文章名称查找">
+                <input class="type_r" type="hidden" name="type" value="find">
+                {% csrf_token %}
+            </form>
+            <input class="zt_find" type="button" value="确认选择" style="color: #006999;width: auto;">
+        </div>
+        <div style="height: 50px;width: 33.3333%;float: right;margin: 0px 0px">
+            <form action="wzgl" method="post" style="width: 100%;height: 50px;margin: 0px 0px">
+                <input class="val_sty" type="text" name="value" placeholder="请输入文章名称查找">
+                <input type="hidden" name="type" value="find">
+                {% csrf_token %}
+                <input class="find" type="submit" value="查找">
+            </form>
+        </div>
+    </div>
+
+    <ul style="margin: 0px 0px;padding: 0px 0px">
+        {{ wz_lb|safe }}
+    </ul>
+</div>
+</body>
+</html>

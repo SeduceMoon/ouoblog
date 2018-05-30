@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>title</title>
+    <script type="application/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/release/wangEditor.min.js"></script>
+
+    <!-- 编辑器编辑后，提交时执行js，获得编辑器的内容，赋值给textarea，用于向后台提交存入数据库 -->
+    <script type="text/javascript">
+        $(function () {
+            $("#commit").click(function () {
+                canup=true;
+                $(".senddata").each(function () {
+                    if($(this).val()=="") canup=false;
+                })
+                if(canup) $("#wz_from").submit()
+                else alert("请完整填写信息")
+            })
+        })
+
+        function modifyContent() {
+            var introduce = document.getElementById("introduce");
+            introduce.value = editor.txt.html();
+        }
+    </script>
+</head>
+<style type="text/css">
+    .senddata,zt_select {
+        width: 99%;
+        height: 40px;
+        margin: 5px auto;
+        padding-left: 1%;
+        border-style: none;
+        border-radius: 5px;
+        background-color: #f1f1f1;
+    }
+</style>
+<body>
+<dic></dic>
+<form id="wz_from" action="add_wz" method="post" onsubmit="modifyContent()">
+    {% csrf_token %}
+    <div class="zt_select" style="color: #666;text-align: center;line-height: 40px;font-size: 15px">
+        选择专题:
+        <select name="wz_by1" style="color: #ff7274;font-size: 15px">
+            <option value="因为一个人爱上一座城">因为一个人爱上一座城</option>
+            <option value="一首歌一个故事">一首歌一个故事</option>
+            <option value="戴我手链的女孩">戴我手链的女孩</option>
+            <option value="生生">生生</option>
+            <option value="努力挣扎的黑夜">努力挣扎的黑夜</option>
+            <option value="生活的琐碎">生活的琐碎</option>
+            <option value="人艰不拆">人艰不拆</option>
+            <option value="苍天饶过谁">苍天饶过谁</option>
+            <option value="幼稚而可爱的伙伴们">幼稚而可爱的伙伴们</option>
+        </select>
+    </div>
+
+    {#    # # 标题#}
+    {#    # wz_name = models.CharField(max_length=500)#}
+    {#    # # 作者寄语#}
+    {#    # wz_zzjy = models.CharField(max_length=1000)#}
+    {#    # # 内容#}
+    {#    # wz_nr = models.TextField(max_length=10000)#}
+    {#    # # 时间#}
+    {#    # wz_time = models.CharField(max_length=20)#}
+    {#    # # 作者#}
+    {#    # wz_zz = models.CharField(max_length=20)#}
+    {#    # # 点赞#}
+    {#    # wz_dz = models.IntegerField()#}
+    {#    # # 浏览量#}
+    {#    # wz_lll = models.IntegerField()#}
+    {#    # # 备用#}
+    {#    # wz_by1 = models.CharField(max_length=1000)#}
+    {#    # # 备用#}
+    {#    # wz_by2 = models.CharField(max_length=1000)#}
+    <input class="senddata" type="text" name="wz_name" placeholder="文章标题">
+    <input class="senddata" type="text" name="wz_zzjy" placeholder="作者寄语">
+    <input class="senddata" type="text" name="wz_zz" placeholder="作者" value="作者：二狗子">
+    <div>
+        <!-- 编辑器编辑，提交时执行js，获得编辑器的内容，赋值给textarea，用于向后台提交存入数据库 -->
+        <textarea rows="5" cols="35" name="wz_nr" style="display:none;" id="introduce"></textarea>
+        <div id="editor" style="height: 900px;">
+        </div>
+        <script type="text/javascript">
+            var E = window.wangEditor
+            var editor = new E('#editor')
+            /* 处理上传图片的controller路径 */
+            editor.customConfig.uploadImgServer = '/uploaddata'
+            /* 定义上传图片的默认名字 */
+            editor.customConfig.uploadFileName = 'img'
+            editor.create()
+            $('.w-e-text').attr('style', 'height:100%;');
+            $('.w-e-text-container').attr('style', 'height:90%;');
+        </script>
+    </div>
+    <input id="commit" type="button" value="提交" style="width: 100%;">
+    {#	<input type="button" value="提交">#}
+</form>
+</body>
+
+</html>
